@@ -4,302 +4,354 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Yahtzee {
+	
+	public static final int NUM_DICE = 5;
+	public static final int NUM_FACES = 6;
+	
+	// "Mark" refers to user input, not location in the array
+	// ie. a mark of '8' refers to 4-of-a-kind, but we should access array element [7], or in other words, element [mark - 1]
+	// But we can print the numeric categories for the user as is; ie. print "13" for Chance, or in other words, "MARK_X"
+	public static final int MARK_3_OF_A_KIND = NUM_FACES + 1;
+	public static final int MARK_4_OF_A_KIND = NUM_FACES + 2;
+	public static final int MARK_FULL_HOUSE = NUM_FACES + 3;
+	public static final int MARK_SMALL_STRAIGHT = NUM_FACES + 4;
+	public static final int MARK_BIG_STRAIGHT = NUM_FACES + 5;
+	public static final int MARK_YAHTZEE = NUM_FACES + 6;
+	public static final int MARK_CHANCE = NUM_FACES + 7;
+	public static final int NUM_MARKS = NUM_FACES + 7;
+	
+	public static final String[] PRINT_MARK_NAME = {
+			"Ones          ",
+			"Twos          ",
+			"Threes        ",
+			"Fours         ",
+			"Fives         ",
+			"Sixes         ",
+			"3 of a Kind   ",
+			"4 of a Kind   ",
+			"Full House    ",
+			"Small Straight",
+			"Large Straight",
+			"YAHTZEE       ",
+			"Chance        "
+	};
+	
+	public static final int MAX_ROLLS = 3;
 
+	public static final int SCORE_TOP_TOTAL_BONUS_THRESHOLD = 63;
+	public static final int SCORE_TOP_TOTAL_BONUS = 35;
+	public static final int SCORE_FULL_HOUSE = 25;
+	public static final int SCORE_SMALL_STRAIGHT = 30;
+	public static final int SCORE_BIG_STRAIGHT = 40;
+	public static final int SCORE_YAHTZEE = 50;
+
+	public static int dice[] = new int[NUM_DICE];
+	public static boolean[] isHeld = new boolean[NUM_DICE];
+	
+	public static int markedScore[] = new int[NUM_MARKS];
+	public static boolean isMarked[] = new boolean[NUM_MARKS];
+	
+	public static Scanner scan = new Scanner(System.in);
+	public static String input = "";
+	public static Random random = new Random();
+	
 	public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in); 
-        Random gen = new Random();
-        int boolStart, roundCount, rollCount, topTotal, bottomTotal, plus1;
-        int die1, die2, die3, die4, die5;
-        boolean c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, rtrn; 
-        c1 = false;
-        c2 = false;
-        c3 = false;
-        c4 = false;
-        c5 = false;
-        c6 = false;
-        c7 = false;
-        c8 = false;
-        c9 = false;
-        c10 = false; 
-        c11 = false;
-        c12 = false;
-        c13 = false;
-        rtrn = false;
-        String hold1, hold2, hold3, hold4, hold5, categChoose;
-        roundCount = 0;
-        rollCount = 0;
-        boolStart = 0; 
-        plus1 = 0;
-        topTotal = 0;
-        bottomTotal = 0;
-    
-        System.out.println ("YAHTZEE");
-        while (boolStart == 0 && roundCount < 13)
-        {
-             System.out.println ("----------------------");
-            System.out.println ("Top so far: " + topTotal);
-            System.out.println ("Bottom so far: " + bottomTotal);
-             System.out.println ();
-            roundCount++;
-            rollCount++; 
-            die1 = gen.nextInt(6) + 1;
-            die2 = gen.nextInt(6) + 1;
-            die3 = gen.nextInt(6) + 1;
-            die4 = gen.nextInt(6) + 1;
-            die5 = gen.nextInt(6) + 1;
-            System.out.println ("Round: " + roundCount);
-            System.out.println ("Roll 1:");
-            System.out.println ("1st  2nd  3rd  4th  5th");
-            System.out.println (" " + die1 + "    " + die2 + "    " + die3 + "    " + die4 + "    " + die5);
-            System.out.println ();
-            System.out.println ("Hold which dice? y/n");
-            System.out.print ("Hold 1st die? :");
-            hold1 = scan.nextLine();
-            System.out.print ("Hold 2nd die? :"); 
-            hold2 = scan.nextLine();
-            System.out.print ("Hold 3rd die? :");
-            hold3 = scan.nextLine();
-            System.out.print ("Hold 4th die? :"); 
-            hold4 = scan.nextLine();
-            System.out.print ("Hold 5th die? :"); 
-            hold5 = scan.nextLine();
-            System.out.println ();
-            
-            if (hold1.equalsIgnoreCase("y") && hold2.equalsIgnoreCase("y") && hold3.equalsIgnoreCase("y") && hold4.equalsIgnoreCase("y") && hold5.equalsIgnoreCase("y"))
-                rollCount = 3;
-            if (hold1.equalsIgnoreCase("n") || hold2.equalsIgnoreCase("n") || hold3.equalsIgnoreCase("n") || hold4.equalsIgnoreCase("n") || hold5.equalsIgnoreCase("n"))
-                rollCount ++;
-            if (hold1.equalsIgnoreCase("n") || hold2.equalsIgnoreCase("n") || hold3.equalsIgnoreCase("n") || hold4.equalsIgnoreCase("n") || hold5.equalsIgnoreCase ("n"))
-                System.out.println ("Roll 2:");
-            if (hold1.equalsIgnoreCase("n"))
-                die1 = gen.nextInt(6) + 1;
-            if (hold2.equalsIgnoreCase ("n"))
-                die2 = gen.nextInt(6) + 1;
-            if (hold3.equalsIgnoreCase("n"))
-                die3 = gen.nextInt(6) + 1;
-            if (hold4.equalsIgnoreCase("n")) 
-                die4 = gen.nextInt(6) + 1;
-            if (hold5.equalsIgnoreCase("n"))
-                die5 = gen.nextInt(6) + 1;
-            System.out.println ("1st  2nd  3rd  4th  5th"); 
-            System.out.println (" " + die1 + "    " + die2 + "    " + die3 + "    " + die4 + "    " + die5);
-            System.out.println ();
-            System.out.println ("Hold which dice? y/n");
-            System.out.print ("Hold 1st die? :"); 
-            hold1 = scan.nextLine();
-            System.out.print ("Hold 2nd die? :"); 
-            hold2 = scan.nextLine();
-            System.out.print ("Hold 3rd die? :"); 
-            hold3 = scan.nextLine();
-            System.out.print ("Hold 4th die? :"); 
-            hold4 = scan.nextLine ();
-            System.out.print ("Hold 5th die? :"); 
-            hold5 = scan.nextLine();
-            System.out.println ();
-            
-            
-            if (hold1.equalsIgnoreCase("y") && hold2.equalsIgnoreCase("y") && hold3.equalsIgnoreCase("y") && hold4.equalsIgnoreCase("y") && hold5.equalsIgnoreCase("y"))
-                rollCount = 3;
-            if (hold1.equalsIgnoreCase("n") || hold2.equalsIgnoreCase("n") || hold3.equalsIgnoreCase("n") || hold4.equalsIgnoreCase("n") || hold5.equalsIgnoreCase("n"))
-                rollCount ++;
-            if (hold1.equalsIgnoreCase("n") || hold2.equalsIgnoreCase("n") || hold3.equalsIgnoreCase("n") || hold4.equalsIgnoreCase("n") || hold5.equalsIgnoreCase ("n"))
-                System.out.println ("Final Roll:");
-            if (hold1.equalsIgnoreCase("n"))
-                die1 = gen.nextInt(6) + 1;
-            if (hold2.equalsIgnoreCase ("n"))
-                die2 = gen.nextInt(6) + 1;
-            if (hold3.equalsIgnoreCase("n"))
-                die3 = gen.nextInt(6) + 1;
-            if (hold4.equalsIgnoreCase("n")) 
-                die4 = gen.nextInt(6) + 1;
-            if (hold5.equalsIgnoreCase("n"))
-                die5 = gen.nextInt(6) + 1;
-            System.out.println ("1st  2nd  3rd  4th  5th"); 
-            System.out.println (" " + die1 + "    " + die2 + "    " + die3 + "    " + die4 + "    " + die5);
-            System.out.println ();
-            
-            while (rollCount == 3) 
-            {
-                System.out.println ("Categories:");
-                System.out.println ("1: 1's");
-                System.out.println ("2: 2's");
-                 System.out.println ("3: 3's");
-                System.out.println ("4: 4's");
-                System.out.println ("5: 5's");
-                System.out.println ("6: 6's"); 
-                System.out.println ("7: 3 Of A Kind");
-                System.out.println ("8: 4 Of A Kind");
-                System.out.println ("9: Full House");
-                 System.out.println ("10: Small Straight");
-                System.out.println ("11: Big Straight");
-                System.out.println ("12: YAHTZEE!");
-                System.out.println ("13: Chance");
-                System.out.print ("Choose the category #: ");
-                categChoose = scan.nextLine();
-                
-//1's
-                while (categChoose.equalsIgnoreCase ("1") && c1 == false)
-                {
-                    if (die1 == 1)
-                        topTotal += 1;
-                    if (die2 == 1)
-                        topTotal += 1;
-                    if (die3 == 1)
-                        topTotal += 1;
-                    if (die4 == 1)
-                        topTotal += 1;
-                    if (die5 == 1)
-                        topTotal += 1; 
-                        
-                    c1 = true;
-                    rtrn = false;
-                    categChoose = ("0");
-                }    
-                if (categChoose.equalsIgnoreCase ("1") && c1 == true)
-                    rtrn = true;
-                    
-//2's    
-                while (categChoose.equalsIgnoreCase("2") && c2 == false)
-                { 
-                    if (die1 == 2)
-                        topTotal += 2;
-                    if (die2 == 2)
-                        topTotal += 2;
-                    if (die3 == 2)
-                        topTotal += 2; 
-                    if (die4 == 2)
-                        topTotal += 2;
-                    if (die5 == 2)
-                        topTotal += 2;
-                        
-                    c2 = true; 
-                    rtrn = false;
-                    categChoose = ("0");
-                }        
-                if (categChoose.equalsIgnoreCase("2") && c2 == true)
-                    rtrn = true; 
-                            
-//3's            
-                while (categChoose.equalsIgnoreCase("3") && c3 == false)
-                {
-                    if (die1 == 3)
-                        topTotal += 3; 
-                    if (die2 == 3)
-                        topTotal += 3;
-                    if (die3 == 3)
-                        topTotal += 3;
-                    if (die4 == 3)
-                        topTotal += 3; 
-                    if (die5 == 3)
-                        topTotal += 3;
-                        
-                    c3 = true;
-                    rtrn = false;
-                    categChoose = ("0"); 
-                }
-                if (categChoose.equalsIgnoreCase("3") && c3 == true)
-                    rtrn = true;
-                        
-//4's
-                while (categChoose.equalsIgnoreCase ("4") && c4 == false)
-                {
-                    if (die1 == 4)
-                        topTotal += 4;
-                    if (die2 == 4)
-                        topTotal += 4;
-                    if (die3 == 4)
-                        topTotal += 4;
-                    if (die4 == 4)
-                        topTotal += 4;
-                    if (die5 == 4)
-                        topTotal += 4; 
-                        
-                    c4 = true;
-                    rtrn = false;
-                    categChoose = ("0");
-                }
-                if (categChoose.equalsIgnoreCase ("4") && c4 == true)
-                    rtrn = true;
-                        
-//5's
-                while (categChoose.equalsIgnoreCase("5") && c5 == false)
-                { 
-                    if (die1 == 5)
-                        topTotal += 5;
-                    if (die2 == 5)
-                        topTotal += 5;
-                    if (die3 == 5)
-                        topTotal += 5; 
-                    if (die4 == 5)
-                        topTotal += 5;
-                    if (die5 == 5)
-                        topTotal += 5;
-                        
-                    c5 = true; 
-                    rtrn = false;
-                    categChoose = ("0");
-                }
-                if (categChoose.equalsIgnoreCase("5") && c5 == true)
-                    rtrn = true; 
-                        
-//6's
-                while (categChoose.equalsIgnoreCase("6") && c6 == false)
-                {
-                    if (die1 == 6)
-                        topTotal += 6; 
-                    if (die2 == 6)
-                        topTotal += 6;
-                    if (die3 == 6)
-                        topTotal += 6;
-                    if (die4 == 6)
-                        topTotal += 6; 
-                    if (die5 == 6)
-                        topTotal += 6;
-                        
-                    c6 = true;
-                    rtrn = false;
-                    categChoose = ("0"); 
-                }
-                if (categChoose.equalsIgnoreCase("6") && c6 == true)
-                    rtrn = true;
-                        
-//3 of a kind
-                
-//4 of a kind 
-//full house
+		
+		for (int i = 0; i < NUM_MARKS; ++i) {
+			markedScore[i] = 0;
+			isMarked[i] = false;
+		}
+		
+		System.out.println("YAHTZEE");
+		for (int round = 0; round < NUM_MARKS; ++round) {
+			System.out.println();
+			
+			for (int i = 0; i < NUM_DICE; ++i) {
+				isHeld[i] = false;
+			}
+			
+			System.out.println("Round " + (round + 1) + ":");
+			
+			boolean isReadyToMark = false;
+			int roll = 0;
+			while (roll < MAX_ROLLS && !isReadyToMark) {
+				rollUnheldDice();
+				++roll;
+				System.out.println("Roll " + roll + ":");
+				printDice();
+				
+				if (roll < MAX_ROLLS) {
+					if (promptHoldDice() == NUM_DICE) {
+						isReadyToMark = true;
+					}
+				}
+			}
 
-//sm straight
-//bg straight
+			printScoreBoard();
+			
+			int mark = -1;
+			int score = 0;
+			
+			boolean isValidMark = false;
+			while (!isValidMark) {
+				
+				mark = -1; // In case user tried to double-mark an already scored mark, enter loop
+				while (mark <= 0 || mark >= NUM_MARKS + 1) {
+					System.out.print("Choose the category #: ");
+					input = scan.nextLine();
+					try {
+						mark = Integer.valueOf(input);
+					} catch (NumberFormatException e) {
+						// Not a number
+					}
+				}
+				
+				// A number
+				if (mark >= 1 && mark <= NUM_FACES) {
+					if (!isMarked[mark-1]) {
+						for (int i = 0; i < NUM_DICE; ++i) {
+							if (dice[i] == mark) {
+								score += mark;
+							}
+						}
+						isValidMark = true;
+					}
+				} else if (mark == MARK_3_OF_A_KIND) {
+					if (!isMarked[mark-1]) {
+						bubbleSortDice();
+						if (dice[0] == dice[1] && dice[1] == dice[2] || 
+								dice[1] == dice[2] && dice[2] == dice[3] ||
+								dice[2] == dice[3] && dice[3] == dice[4] ) {
+							score = sumOfDice();
+						}
+						isValidMark = true;
+					}
+				} else if (mark == MARK_4_OF_A_KIND) {
+					if (!isMarked[mark-1]) {
+						bubbleSortDice();
+						if (dice[0] == dice[1] && dice[1] == dice[2] && dice[2] == dice[3] || 
+								dice[1] == dice[2] && dice[2] == dice[3] && dice[3] == dice[4] ) {
+							score = sumOfDice();
+						}
+						isValidMark = true;
+					}
+				} else if (mark == MARK_FULL_HOUSE) {
+					if (!isMarked[mark-1]) {
+						bubbleSortDice();
+						if (dice[0] == dice[1] && dice[1] == dice[2] && dice[3] == dice[4] || 
+								dice[0] == dice[1] && dice[2] == dice[3] && dice[3] == dice[4] ) {
+							score = SCORE_FULL_HOUSE;
+						}
+						isValidMark = true;
+					}
+				} else if (mark == MARK_SMALL_STRAIGHT) {
+					if (!isMarked[mark-1]) {
+						bubbleSortDice();
+						
+						// Push any duplicates found to back of array
+						boolean foundDuplicate = false;
+						for (int i = 1; i < NUM_DICE && !foundDuplicate; ++i) {
+							if (dice[i] == dice[i-1]) {
+								for (; i < NUM_DICE - 1; i++) {
+									dice[i] = dice[i+1];
+								}
+								foundDuplicate = true;
+							}
+						}
+						
+						// Check for continuity on front dice
+						boolean isSmallStraight = true;
+						for (int i = 1; i < NUM_DICE - 1 && isSmallStraight; ++i) {
+							if (dice[i-1] != dice[i] - 1) {
+								isSmallStraight = false;
+							}
+						}
+						// Check for continuity again, on the back dice
+						if (!isSmallStraight) {
+							for (int i = 2; i < NUM_DICE && isSmallStraight; ++i) {
+								if (dice[i-1] != dice[i] - 1) {
+									isSmallStraight = false;
+								}
+							}
+						}
+						if (isSmallStraight) {
+							score = SCORE_SMALL_STRAIGHT;
+						}
+						isValidMark = true;
+					}
+				} else if (mark == MARK_BIG_STRAIGHT) {
+					if (!isMarked[mark-1]) {
+						bubbleSortDice();
+						
+						// Check for continuity
+						boolean isBigStraight = true;
+						for (int i = 1; i < NUM_DICE && isBigStraight; ++i) {
+							if (dice[i-1] != dice[i] - 1) {
+								isBigStraight = false;
+							}
+						}
+						if (isBigStraight) {
+							score = SCORE_BIG_STRAIGHT;
+						}
+						isValidMark = true;
+					}
+				} else if (mark == MARK_YAHTZEE) {
+					if (!isMarked[mark-1]) {
+						boolean isYahtzee = true;
+						for (int i = 1; i < NUM_DICE && isYahtzee; ++i) {
+							if (dice[i-1] != dice[i]) {
+								isYahtzee = false;
+							}
+						}
+						if (isYahtzee) {
+							score = SCORE_YAHTZEE;
+						}
+						isValidMark = true;
+					}
+				} else if (mark == MARK_CHANCE) {
+					if (!isMarked[mark-1]) {
+						score = sumOfDice();
+						isValidMark = true;
+					}
+				} else {
+					// Impossible
+				}
+			}
 
-//yahtzee
-                while (die1 == die2 && die2 == die3 && die3 == die4 && die4 == die5 && c12 == false)
-                { 
-                    System.out.println ("Nice Yahtzee, man.");
-                    bottomTotal += 50;
-                    c12 = true;
-                    rtrn = false;
-                    categChoose = ("0"); 
-                }
-                
-//chance
-                
-                if (rtrn == false)
-                    rollCount = 0;
-                if (rtrn == true)
-                    rollCount = 3; 
-            }
-            
-        }
-        while (roundCount == 13)
-        {
-            if (topTotal >= 63)
-                topTotal += 35;
-            if (topTotal >= 63)
-                 System.out.println ("Bonus 35 points for achieving 63+ on Upper Section!");
-            System.out.println ("Top Section: " + topTotal);
-            System.out.println ("Bottom Section: " + bottomTotal); 
-            System.out.println ("GRAND TOTAL: *" + (topTotal + bottomTotal) + "*");
-        }
-    }
+			markedScore[mark-1] = score;
+			isMarked[mark-1] = true;
+			printScoreBoard();
+		}
+		
+		System.out.println("Final Score: " + (scoreTop() + scoreTopBonus() + scoreBottom()));
+	}
+	
+	// Returns total of top marks
+	public static int scoreTop() {
+		int top = 0;
+		for (int i = 0; i < NUM_FACES; ++i) {
+			top += markedScore[i];
+		}
+		return top;
+	}
+	
+	public static int scoreTopBonus() {
+		if (scoreTop() < SCORE_TOP_TOTAL_BONUS_THRESHOLD) {
+			return 0;
+		}
+		return SCORE_TOP_TOTAL_BONUS;
+	}
+	
+	// Returns total of bottom marks
+	public static int scoreBottom() {
+		int bottom = 0;
+		for (int i = NUM_FACES; i < NUM_MARKS; ++i) {
+			bottom += markedScore[i];
+		}
+		return bottom;
+	}
+	
+	// Returns number of dice thrown, ie. not held
+	public static int rollUnheldDice() {
+		int thrown = 0;
+		for (int i = 0; i < NUM_DICE; ++i) {
+			if (!isHeld[i]) {
+				dice[i] = random.nextInt(NUM_FACES) + 1;
+				++thrown;
+			}
+		}
+		return thrown;
+	}
+	
+	// Prints state of dice
+	public static void printDice() {
+		System.out.println("1st  2nd  3rd  4th  5th");
+		System.out.print(" ");
+		for (int i = 0; i < NUM_DICE; ++i) {
+			System.out.print(dice[i] + "    ");
+		}
+		System.out.println();
+	}
 
+	// Ask user which dice user would like to hold
+	// Returns the number of dice held by user
+	public static int promptHoldDice() {
+		String in = "";
+		int heldDice = 0;
+		
+		System.out.println("Hold which dice? y/n");
+		for (int i = 0; i < NUM_DICE; ++i) {
+			System.out.print("Hold die #" + (i + 1) + "? :");
+			in = scan.nextLine();
+			if (in.equalsIgnoreCase("y")) {
+				isHeld[i] = true;
+				++heldDice;
+			} else if (in.equalsIgnoreCase("n")){
+				isHeld[i] = false;
+			} else {
+				--i;
+			}
+		}
+		System.out.println();
+
+		return heldDice;
+	}
+	
+	public static void printScoreBoard() {
+		int top = scoreTop();
+		int bonus = scoreTopBonus();
+		int bottom = scoreBottom();
+		int total = top + bonus + bottom;
+		
+		printScoreBoardSeparator();
+		for (int i = 1; i <= NUM_FACES; ++i) {
+			printScoreBoardLine(i);
+		}
+		printScoreBoardSeparator();
+		System.out.println("|      UPPER TOTAL    | " + (top <= 99 ? " " : "") + (top <= 9 ? " " : "") + top + " |");
+		System.out.println("|      UPPER BONUS    | " + (bonus <= 9 ? "  " : " ") + bonus + " |");
+		printScoreBoardSeparator();
+		for (int i = NUM_FACES + 1; i <= NUM_MARKS; ++i) {
+			printScoreBoardLine(i);
+		}
+		printScoreBoardSeparator();
+		System.out.println("|      BOTTOM TOTAL   | " + (bottom <= 99 ? " " : "") + (bottom <= 9 ? " " : "") + bottom + " |");
+		printScoreBoardSeparator();
+		System.out.println("|      TOTAL          | " + (total <= 99 ? " " : "") + (total <= 9 ? " " : "") + total + " |");
+		printScoreBoardSeparator();
+	}
+	
+	public static void printScoreBoardSeparator() {
+		// ---------------    2#   12#############   3##
+		System.out.println("+----+----------------+-----+");
+	}
+	
+	public static void printScoreBoardLine(int line) {
+		// Two spaces
+		String lineNumber = "| " + (line) + (line <= 9 ? " " : "");
+		
+		// Three spaces
+		String lineScore = (isMarked[line-1] ? " " + (markedScore[line-1] <= 9 ? " " : "") + markedScore[line-1] : "   ");
+		System.out.println(lineNumber + " | " + PRINT_MARK_NAME[line-1] + " | " + lineScore + " |");
+	}
+	
+	public static int sumOfDice() {
+		int sum = 0;
+		for (int i = 0; i < NUM_DICE; ++i) {
+			sum += dice[i];
+		}
+		return sum;
+	}
+	
+	private static void bubbleSortDice() {
+		for (int i = 0; i < NUM_DICE; ++i) {
+			for (int j = 1; j < NUM_DICE - i; ++j) {
+				if (dice[j] < dice[j-1]) {
+					int t = dice[j];
+					dice[j] = dice[j-1];
+					dice[j-1] = t;
+				}
+			}
+		}
+	}
 }
